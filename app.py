@@ -63,7 +63,8 @@ def text2story(caption):
     prompt = (
         "Write a short children's story based on this image description: "
         f"{caption}. "
-        "Write 4 to 5 simple sentences. "
+        "Write 5 to 6 simple sentences. "
+        "Do not repeat the same idea. "
         "Stay close to the image description, but add a few natural details. "
         "Use simple English and end with a happy ending."
     )
@@ -76,6 +77,7 @@ def text2story(caption):
         min_new_tokens=35,
         num_beams=4,
         no_repeat_ngram_size=3,
+        repetition_penalty=1.2,
         early_stopping=True
     )
 
