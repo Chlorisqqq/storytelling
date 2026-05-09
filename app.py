@@ -41,8 +41,17 @@ def img2text(uploaded_image):
     if uploaded_image.mode != "RGB":
         uploaded_image = uploaded_image.convert("RGB")
 
-    inputs = processor(images=uploaded_image, return_tensors="pt")
-    output = model.generate(**inputs, max_new_tokens=30)
+    inputs = processor(
+        images=uploaded_image,
+        text="Describe this image in detail.",
+        return_tensors="pt"
+    )
+
+    output = model.generate(
+        **inputs,
+        max_new_tokens=50,
+        num_beams=5
+    )
 
     caption = processor.decode(output[0], skip_special_tokens=True)
     return caption.strip()
@@ -52,22 +61,21 @@ def text2story(caption):
     tokenizer, model = load_story_model()
 
     prompt = (
-        "Write a short children's story using only the details in this image description: "
-    f"{caption}. "
-    "Write 4 to 5 simple sentences. "
-    "Keep the story closely related to the image description. "
-    "Do not add unrelated characters or events. "
-    "Use simple English and end happily."
+        "Write a children's story based on this image description: "
+        f"{caption}. "
+        "Write 5 simple sentences. "
+        "Stay close to the image description, but add a few natural details. "
+        "Use simple English and end with a happy ending."
     )
 
     inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
 
     outputs = model.generate(
-    **inputs,
-    max_new_tokens=90,
-    num_beams=4,
-    no_repeat_ngram_size=3,
-    early_stopping=True
+        **inputs,
+        max_new_tokens=120,
+        min_new_tokens=40,
+        num_beams=4,
+        no_repeat_ngram_size=3
     )
 
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
