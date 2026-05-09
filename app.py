@@ -72,13 +72,14 @@ def text2story(caption):
     inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
 
     outputs = model.generate(
-        **inputs,
-        max_new_tokens=120,
-        min_new_tokens=50,
-        num_beams=4,
-        no_repeat_ngram_size=3,
-        repetition_penalty=1.2,
-        early_stopping=True
+    **inputs,
+        max_new_tokens=130,
+        min_new_tokens=55,
+        do_sample=True,
+        temperature=0.9,
+        top_p=0.92,
+        no_repeat_ngram_size=4,
+        repetition_penalty=1.15
     )
 
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
