@@ -63,7 +63,8 @@ def text2story(caption):
     prompt = (
         "Write a short children's story based on this image description: "
         f"{caption}. "
-        "Write 5 to 6 simple sentences. "
+        "Write a children's story of about 50 to 100 words. "
+        "Use 5 to 6 simple sentences. "
         "Do not repeat the same idea. "
         "Stay close to the image description, but add a few natural details. "
         "Use simple English and end with a happy ending."
@@ -73,8 +74,8 @@ def text2story(caption):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=100,
-        min_new_tokens=35,
+        max_new_tokens=120,
+        min_new_tokens=40,
         num_beams=4,
         no_repeat_ngram_size=3,
         repetition_penalty=1.2,
