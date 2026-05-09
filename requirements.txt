@@ -1,7 +1,7 @@
 streamlit
+Pillow
+gTTS
 transformers
 torch
-pillow
-gTTS
+torchvision
 sentencepiece
-protobuf
