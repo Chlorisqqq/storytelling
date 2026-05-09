@@ -52,22 +52,24 @@ def text2story(caption):
     tokenizer, model = load_story_model()
 
     prompt = (
-        "Write a short children's story in simple English based on this image description: "
+        "Write a complete children's story based on this image description: "
         f"{caption}. "
-        "Write 5 to 6 sentences. "
-        "Use clear and easy words for young children. "
-        "Make the story cheerful and natural. "
-        "End with a happy ending."
+        "Imagine the children are spending a fun day in the park. "
+        "Write exactly 6 sentences. "
+        "Use simple English for young children. "
+        "Include actions, friendship, a little adventure, and a happy ending."
     )
 
     inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=100,
-        num_beams=4,
-        no_repeat_ngram_size=3,
-        early_stopping=True
+        max_new_tokens=150,
+        min_new_tokens=60,
+        do_sample=True,
+        temperature=0.9,
+        top_p=0.95,
+        no_repeat_ngram_size=3
     )
 
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
