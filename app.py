@@ -48,15 +48,6 @@ def img2text(uploaded_image):
     return caption.strip()
 
 
-def is_too_repetitive(text):
-    words = re.findall(r"\b[a-zA-Z]+\b", text.lower())
-    if len(words) < 20:
-        return True
-
-    unique_ratio = len(set(words)) / len(words)
-    return unique_ratio < 0.30
-
-
 def text2story(caption):
     tokenizer, model = load_story_model()
 
@@ -80,17 +71,7 @@ def text2story(caption):
     )
 
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
-
-    if len(story.split()) >= 30 and not is_too_repetitive(story):
-        return story
-
-    return (
-        f"One day, {caption} made everyone smile. "
-        f"The children laughed and played together happily. "
-        f"They had a fun little adventure and helped one another. "
-        f"Everyone enjoyed the beautiful day very much. "
-        f"At the end of the day, they went home with happy hearts."
-    )
+    return story
 
 
 def text2audio(story_text):
