@@ -1,9 +1,8 @@
-import os
-import re
-import tempfile
 import streamlit as st
 from PIL import Image
 from gtts import gTTS
+import tempfile
+
 from transformers import (
     BlipProcessor,
     BlipForConditionalGeneration,
@@ -11,59 +10,60 @@ from transformers import (
     AutoModelForSeq2SeqLM
 )
 
-st.set_page_config(
-    page_title="Kids Storytelling App",
-    page_icon="📚",
-    layout="centered"
-)
+# ----------------------------
+# Page config
+# ----------------------------
+st.set_page_config(page_title="Image to Story", page_icon="📖")
+st.title("Image to Story Generator")
+st.write("Upload an image to generate a caption, a short story, and audio narration.")
 
-st.title("📚 Kids Storytelling App")
-st.write("Upload an image and generate a children's story with audio.")
-
-
+# ----------------------------
+# Load BLIP model
+# ----------------------------
 @st.cache_resource
 def load_blip_model():
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
     return processor, model
 
-
+# ----------------------------
+# Load FLAN-T5 model
+# ----------------------------
 @st.cache_resource
 def load_story_model():
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
     model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
     return tokenizer, model
 
-
+# ----------------------------
+# Image to caption
+# ----------------------------
 def img2text(uploaded_image):
     processor, model = load_blip_model()
 
     if uploaded_image.mode != "RGB":
         uploaded_image = uploaded_image.convert("RGB")
 
-    inputs = processor(
-        images=uploaded_image,
-        text="Describe this image in detail.",
-        return_tensors="pt"
-    )
+    inputs = processor(images=uploaded_image, return_tensors="pt")
 
     output = model.generate(
         **inputs,
-        max_new_tokens=50,
-        num_beams=5
+        max_new_tokens=30
     )
 
     caption = processor.decode(output[0], skip_special_tokens=True)
     return caption.strip()
 
-
+# ----------------------------
+# Caption to story
+# ----------------------------
 def text2story(caption):
     tokenizer, model = load_story_model()
 
     prompt = (
-        "Write a children's story based on this image description: "
+        "Write a short children's story based on this image description: "
         f"{caption}. "
-        "Write 5 simple sentences. "
+        "Write 4 to 5 simple sentences. "
         "Stay close to the image description, but add a few natural details. "
         "Use simple English and end with a happy ending."
     )
@@ -72,46 +72,46 @@ def text2story(caption):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=120,
-        min_new_tokens=40,
+        max_new_tokens=100,
+        min_new_tokens=35,
         num_beams=4,
-        no_repeat_ngram_size=3
+        no_repeat_ngram_size=3,
+        early_stopping=True
     )
 
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
     return story
 
-
-def text2audio(story_text):
+# ----------------------------
+# Story to audio
+# ----------------------------
+def text2speech(story_text):
     tts = gTTS(text=story_text, lang="en")
+
     temp_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
     tts.save(temp_audio.name)
     return temp_audio.name
 
-
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+# ----------------------------
+# Upload image
+# ----------------------------
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded Image", width="stretch")
+    image = Image.open(uploaded_file)
+
+    st.image(image, caption="Uploaded Image", use_container_width=True)
 
     if st.button("Generate Story"):
-        try:
+        with st.spinner("Generating..."):
             caption = img2text(image)
             story = text2story(caption)
-            audio_path = text2audio(story)
+            audio_file = text2speech(story)
 
-            st.subheader("Image Caption")
-            st.write(caption)
+        st.subheader("Image Caption")
+        st.write(caption)
 
-            st.subheader("Story")
-            st.write(story)
+        st.subheader("Story")
+        st.write(story)
 
-            with open(audio_path, "rb") as audio_file:
-                audio_bytes = audio_file.read()
-                st.audio(audio_bytes, format="audio/mp3")
-
-            os.remove(audio_path)
-
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+        st.audio(audio_file)
