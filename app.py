@@ -12,6 +12,67 @@ from transformers import (
 
 # Page config
 st.set_page_config(page_title="Kids Image Story Generator", page_icon="📖", layout="centered")
+st.markdown(
+    """
+    <style>
+    /* Main app background */
+    .stApp {
+        background: linear-gradient(to bottom, #fff8f0, #fef6ff);
+        font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    }
+
+    /* Main title */
+    h1 {
+        color: #5b4b8a;
+        text-align: center;
+        font-weight: 800;
+    }
+
+    /* Subheaders */
+    h2, h3 {
+        color: #6c63a8;
+        font-weight: 700;
+    }
+
+    /* Paragraph text */
+    p, li {
+        font-size: 17px;
+        color: #333333;
+    }
+
+    /* Button styling */
+    div.stButton > button {
+        background-color: #ffcc70;
+        color: #333333;
+        border: none;
+        border-radius: 12px;
+        padding: 0.6em 1.2em;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    div.stButton > button:hover {
+        background-color: #ffb84d;
+        color: black;
+    }
+
+    /* File uploader */
+    section[data-testid="stFileUploader"] {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 1rem;
+        border-radius: 14px;
+        border: 2px dashed #d8c6f0;
+    }
+
+    /* Message boxes */
+    div[data-testid="stAlert"] {
+        border-radius: 12px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.title("Kids Image Story Generator")
 st.markdown(
     """
