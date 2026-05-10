@@ -106,8 +106,8 @@ if uploaded_file is not None:
 
 st.subheader("Step 2: Create Your Story ✨")
 
-    if st.button("✨ Create Story"):
-        with st.spinner("Creating your story and audio..."):
+if st.button("✨ Create Story"):
+    with st.spinner("Creating your story and audio..."):
         caption = img2text(image)
         story = text2story(caption)
         audio_file = text2speech(story)
