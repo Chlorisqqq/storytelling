@@ -200,8 +200,7 @@ if st.button("Create Story"):
     st.write(story)
 
     word_count = len(story.split())
-    st.markdown("### Story Word Count")
-    st.write(f"{word_count} words")
+    st.caption(f"📏 Story Word Count: {word_count} words")
 
     st.markdown("### Listen to the Story")
     st.audio(audio_file)
