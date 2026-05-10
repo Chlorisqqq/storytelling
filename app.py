@@ -104,27 +104,25 @@ if uploaded_file is not None:
     st.image(image, caption="Uploaded Image", use_container_width=True)
     st.success("✅ Image uploaded successfully!")
 
-    st.subheader("Step 2: Generate a Story ✨")
-    if st.button("Generate Story"):
+st.subheader("Step 2: Create Your Story ✨")
+
+    if st.button("✨ Create Story"):
         with st.spinner("Creating your story and audio..."):
-            caption = img2text(image)
-            story = text2story(caption)
-            audio_file = text2speech(story)
+        caption = img2text(image)
+        story = text2story(caption)
+        audio_file = text2speech(story)
 
-        st.subheader("Step 3: Results 🎉")
-        col1, col2 = st.columns(2)
+    st.subheader("Step 3: Enjoy Your Story 🎉")
 
-        with col1:
-                st.markdown("### 🏷️ Image Caption")
-                st.write(caption)
+    st.markdown("### 🏷️ Picture Description")
+    st.write(caption)
 
-        with col2:
-                word_count = len(story.split())
-                st.markdown("### 📏 Story Word Count")
-                st.write(f"{word_count} words")
-        
-        st.markdown("### 📚 Generated Story")
-        st.write(story)
+    st.markdown("### 📖 Your Story")
+    st.write(story)
 
-        st.markdown("### 🔊 Audio Narration")
-        st.audio(audio_file)
+    word_count = len(story.split())
+    st.markdown("### 📏 Story Word Count")
+    st.write(f"{word_count} words")
+
+    st.markdown("### 🔊 Listen to the Story")
+    st.audio(audio_file)
