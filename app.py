@@ -22,7 +22,7 @@ st.markdown(
     3. **Read the story aloud**
 
     This app is designed for **children aged 3–10**.
-    """
+    """)
 
 st.info("👆 Start by uploading a JPG or PNG image below.")
 
