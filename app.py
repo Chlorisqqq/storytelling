@@ -181,7 +181,7 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
 
     st.image(image, caption="Uploaded Image", use_container_width=True)
-    st.success("✅ Image uploaded successfully!")
+    st.success("Image uploaded successfully!")
 
 st.subheader("Step 2: Create Your Story")
 
@@ -200,7 +200,7 @@ if st.button("Create Story"):
     st.write(story)
 
     word_count = len(story.split())
-    st.caption(f"📏 Story Word Count: {word_count} words")
+    st.caption(f"Story Word Count: {word_count} words")
 
     st.markdown("### Listen to the Story")
     st.audio(audio_file)
