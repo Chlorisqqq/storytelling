@@ -10,34 +10,37 @@ from transformers import (
     AutoModelForSeq2SeqLM
 )
 
-# ----------------------------
 # Page config
-# ----------------------------
-st.set_page_config(page_title="Image to Story", page_icon="📖")
-st.title("Image to Story Generator")
-st.write("Upload an image to generate a caption, a short story, and audio narration.")
+st.set_page_config(page_title="Kids Image Story Generator", page_icon="📖", layout="centered")
+st.title("Kids Image Story Generator")
+st.markdown(
+    """
+    Welcome! Upload an image and this app will:
 
-# ----------------------------
+    1. **Describe the image**
+    2. **Create a short story**
+    3. **Read the story aloud**
+
+    This app is designed for **children aged 3–10**.
+    """
+
+st.info("👆 Start by uploading a JPG or PNG image below.")
+
 # Load BLIP model
-# ----------------------------
 @st.cache_resource
 def load_blip_model():
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
     return processor, model
 
-# ----------------------------
 # Load FLAN-T5 model
-# ----------------------------
 @st.cache_resource
 def load_story_model():
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
     model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
     return tokenizer, model
 
-# ----------------------------
 # Image to caption
-# ----------------------------
 def img2text(uploaded_image):
     processor, model = load_blip_model()
 
@@ -54,9 +57,7 @@ def img2text(uploaded_image):
     caption = processor.decode(output[0], skip_special_tokens=True)
     return caption.strip()
 
-# ----------------------------
 # Caption to story
-# ----------------------------
 def text2story(caption):
     tokenizer, model = load_story_model()
 
@@ -85,9 +86,7 @@ def text2story(caption):
     story = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0].strip()
     return story
 
-# ----------------------------
 # Story to audio
-# ----------------------------
 def text2speech(story_text):
     tts = gTTS(text=story_text, lang="en")
 
@@ -95,26 +94,37 @@ def text2speech(story_text):
     tts.save(temp_audio.name)
     return temp_audio.name
 
-# ----------------------------
 # Upload image
-# ----------------------------
+st.subheader("Step 1: Upload an Image 🖼️")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
 
     st.image(image, caption="Uploaded Image", use_container_width=True)
+    st.success("✅ Image uploaded successfully!")
 
+    st.subheader("Step 2: Generate a Story ✨")
     if st.button("Generate Story"):
-        with st.spinner("Generating..."):
+        with st.spinner("Creating your story and audio..."):
             caption = img2text(image)
             story = text2story(caption)
             audio_file = text2speech(story)
 
-        st.subheader("Image Caption")
-        st.write(caption)
+        st.subheader("Step 3: Results 🎉")
+        col1, col2 = st.columns(2)
 
-        st.subheader("Story")
+        with col1:
+                st.markdown("### 🏷️ Image Caption")
+                st.write(caption)
+
+        with col2:
+                word_count = len(story.split())
+                st.markdown("### 📏 Story Word Count")
+                st.write(f"{word_count} words")
+        
+        st.markdown("### 📚 Generated Story")
         st.write(story)
 
+        st.markdown("### 🔊 Audio Narration")
         st.audio(audio_file)
