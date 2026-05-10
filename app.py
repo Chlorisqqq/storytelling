@@ -15,59 +15,77 @@ st.set_page_config(page_title="Kids Image Story Generator", page_icon="📖", la
 st.markdown(
     """
     <style>
-    /* Main app background */
+    /* Overall page */
     .stApp {
-        background: linear-gradient(to bottom, #fff8f0, #fef6ff);
-        font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+        background: linear-gradient(to bottom, #eaf6ff, #f7fbff);
+        font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+        color: #2f3e46;
     }
 
     /* Main title */
     h1 {
-        color: #5b4b8a;
+        color: #3a6ea5;
         text-align: center;
         font-weight: 800;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3em;
     }
 
     /* Subheaders */
     h2, h3 {
-        color: #6c63a8;
+        color: #4f7cac;
         font-weight: 700;
     }
 
-    /* Paragraph text */
-    p, li {
-        font-size: 17px;
-        color: #333333;
+    /* Normal text */
+    p, li, label, div {
+        color: #2f3e46;
+        font-size: 16px;
     }
 
-    /* Button styling */
+    /* Buttons */
     div.stButton > button {
-        background-color: #ffcc70;
-        color: #333333;
+        background: linear-gradient(to right, #74b9ff, #a29bfe);
+        color: white;
         border: none;
-        border-radius: 12px;
-        padding: 0.6em 1.2em;
+        border-radius: 14px;
+        padding: 0.65em 1.4em;
         font-size: 16px;
-        font-weight: bold;
-        transition: 0.3s ease;
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(116, 185, 255, 0.3);
+        transition: all 0.25s ease;
     }
 
     div.stButton > button:hover {
-        background-color: #ffb84d;
-        color: black;
+        background: linear-gradient(to right, #5dade2, #8e8ef8);
+        color: white;
+        transform: translateY(-1px);
     }
 
-    /* File uploader */
+    /* File uploader box */
     section[data-testid="stFileUploader"] {
-        background-color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.75);
         padding: 1rem;
-        border-radius: 14px;
-        border: 2px dashed #d8c6f0;
+        border-radius: 16px;
+        border: 2px dashed #9ecbff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
-    /* Message boxes */
+    /* Alerts / info / warning / success */
     div[data-testid="stAlert"] {
-        border-radius: 12px;
+        border-radius: 14px;
+    }
+
+    /* Audio player spacing */
+    audio {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Horizontal block spacing */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
     </style>
     """,
