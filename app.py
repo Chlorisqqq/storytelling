@@ -11,7 +11,7 @@ from transformers import (
 )
 
 # Page config
-st.set_page_config(page_title="Kids Image Story Generator", page_icon="📖", layout="centered")
+st.set_page_config(page_title="Kids Image Story Generator", layout="centered")
 st.markdown(
     """
     <style>
@@ -103,7 +103,7 @@ st.markdown(
     This app is designed for **children aged 3–10**.
     """)
 
-st.info("👆 Start by uploading a JPG or PNG image below.")
+st.info("Start by uploading a JPG or PNG image below.")
 
 # Load BLIP model
 @st.cache_resource
@@ -174,7 +174,7 @@ def text2speech(story_text):
     return temp_audio.name
 
 # Upload image
-st.subheader("Step 1: Upload an Image 🖼️")
+st.subheader("Step 1: Upload an Image")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -183,25 +183,25 @@ if uploaded_file is not None:
     st.image(image, caption="Uploaded Image", use_container_width=True)
     st.success("✅ Image uploaded successfully!")
 
-st.subheader("Step 2: Create Your Story ✨")
+st.subheader("Step 2: Create Your Story")
 
-if st.button("✨ Create Story"):
+if st.button("Create Story"):
     with st.spinner("Creating your story and audio..."):
         caption = img2text(image)
         story = text2story(caption)
         audio_file = text2speech(story)
 
-    st.subheader("Step 3: Enjoy Your Story 🎉")
+    st.subheader("Step 3: Enjoy Your Story")
 
-    st.markdown("### 🏷️ Picture Description")
+    st.markdown("### Picture Description")
     st.write(caption)
 
-    st.markdown("### 📖 Your Story")
+    st.markdown("### Your Story")
     st.write(story)
 
     word_count = len(story.split())
-    st.markdown("### 📏 Story Word Count")
+    st.markdown("### Story Word Count")
     st.write(f"{word_count} words")
 
-    st.markdown("### 🔊 Listen to the Story")
+    st.markdown("### Listen to the Story")
     st.audio(audio_file)
